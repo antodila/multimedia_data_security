@@ -1,0 +1,21 @@
+# Python virtual environments
+OFF_MDS_ENV/
+
+# Byte-compiled / cache / logs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Data, system junk, and editors
+*.db
+*.sqlite
+.DS_Store
+.ipynb_checkpoints/
+.env
+*.egg-info/
+*.exe
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/

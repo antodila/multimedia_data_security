@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 # attacks.py
 # Permitted attacks for the challenge.
 
@@ -36,4 +33,3 @@ def attack_sharp(img, amount=1.0):
     blur = cv2.GaussianBlur(img, (0,0), 3)
     out = cv2.addWeighted(img.astype(np.float32), 1 + amount, blur.astype(np.float32), -amount, 0)
     return np.clip(out, 0, 255).astype(np.uint8)
->>>>>>> try

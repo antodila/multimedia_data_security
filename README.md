@@ -201,3 +201,37 @@ lena_grey.bmp,shadowmark,47.42,resize,scale=0.6,shadowmark_lena_grey_resize06.bm
 
 lena_grey.bmp,shadowmark,47.52,awgn,sigma=6,shadowmark_lena_grey_awgn6.bmp
 ```
+
+## 🔬 Attack Validation on the 101-Image Dataset
+
+Download the images that the teacher send, and add in a folder onto the project ones. After computing the ROC curve (AUC = 0.858, τ = 0.037798), we validated the detection threshold
+on five random images from the 101-image dataset (`0000.bmp` – `0100.bmp`).
+
+Each image was watermarked and tested under the three candidate attacks previously identified
+from the grid search:
+
+| Attack | Avg WPSNR [dB] | Mean presence | Comment |
+|:--------|:---------------:|:--------------:|:---------|
+| AWGN σ = 14 | ≈ 40.3 – 40.4 | Variable (0 / 1) | Borderline, sometimes passes τ |
+| Resize 0.55 | ≈ 40 – 46 | Mostly 1 | Watermark still detected |
+| Resize 0.6 + JPEG 70 | ≈ 36 – 47 | Mostly 0 | ✅ Valid attack (WPSNR ≥ 35, presence = 0) |
+
+The **resize 0.6 + JPEG 70** combination consistently removes the watermark while preserving
+acceptable image quality (WPSNR ≥ 35 dB) across multiple random samples.
+
+---
+
+**Valid destroyed image examples**
+
+shadowmark_lena_grey_resize_scale0.6__jpeg_qf70.bmp
+shadowmark_0097_resize06_jpeg70.bmp
+shadowmark_0005_resize06_jpeg70.bmp
+shadowmark_0033_resize06_jpeg70.bmp
+
+---
+
+**Conclusion:**  
+The chosen detection threshold τ = 0.037798 correctly avoids false positives on clean or destroyed
+images, and successfully detects watermarks in all unaltered or lightly attacked cases.
+The attack *resize 0.6 + JPEG 70* meets the official challenge condition  
+(**presence = 0 and WPSNR ≥ 35 dB**) on the extended dataset.

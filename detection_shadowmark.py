@@ -9,7 +9,7 @@ from scipy.fft import dct
 from scipy.signal import convolve2d
 
 # ---- Threshold from your ROC run ----
-tau = 0.307841  # paste your numeric tau here
+tau = 0.037798  # paste your numeric tau here
 
 # ---- Must mirror embedding constants ----
 SEED = 123

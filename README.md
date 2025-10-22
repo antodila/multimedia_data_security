@@ -194,8 +194,10 @@ print("elapsed:", time.time()-t0)
 
 PY
 ```
-8. Attack log (optional)Append entries of valid attacks (WPSNR $ge$ 35, presence=0):Snippet di codiceImage,Group,WPSNR,Attack,Params,OutputFile
+8. Attack log (optional)Append entries of valid attacks (WPSNR $ge$ 35, presence=0):Snippet di codice
+```Image,Group,WPSNR,Attack,Params,OutputFile
 
 lena_grey.bmp,shadowmark,47.42,resize,scale=0.6,shadowmark_lena_grey_resize06.bmp
 
 lena_grey.bmp,shadowmark,47.52,awgn,sigma=6,shadowmark_lena_grey_awgn6.bmp
+```

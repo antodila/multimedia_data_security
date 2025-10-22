@@ -28,154 +28,174 @@ Group name: **shadowmark**
 ## ⚙️ Setup
 
 ### 1. Clone or download the repository
+
 ```bash
+
 git clone <repo-url>
+
 cd project
-2. Create and activate a Python virtual environment
+```
+### 2. Create and activate a Python virtual environment
 On Windows (PowerShell)
-powershell
-Copia codice
-python -m venv OFF_MDS_ENV
-OFF_MDS_ENV\Scripts\Activate.ps1
-On macOS / Linux / Git Bash
-bash
-Copia codice
-python3 -m venv OFF_MDS_ENV
+```PowerShellpython -m venv OFF_MDS_ENV
+
+OFF_MDS_ENVScriptsActivate.ps1
+```
+On macOS / Linux / 
+```Git BashBashpython3 -m venv OFF_MDS_ENV
+
 source OFF_MDS_ENV/bin/activate
-3. Install dependencies
-bash
-Copia codice
-pip install numpy scipy opencv-python scikit-learn matplotlib pandas
-🧩 Step-by-step workflow
-0. Verify environment and files
-bash
-Copia codice
-pwd
+```
+### 3. Install dependenciesBashpip install numpy scipy opencv-python scikit-learn matplotlib pandas
+
+🧩 Step-by-step workflow0. Verify environment and filesBashpwd
+```
 ls -la
+
 python -V
+
 python -c "import numpy, cv2, scipy; print('libs ok')"
+```
 1. Generate a watermark (if not provided)
-bash
-Copia codice
+```Bash
 python - <<'PY'
+
 import numpy as np
+
 np.save('mark.npy', (np.random.rand(1024) > 0.5).astype('uint8'))
+
 print("Dummy mark.npy created")
+
 PY
+```
 2. Embed the watermark
-bash
-Copia codice
+```Bash
 python - <<'PY'
+
 from embedding import embedding
+
 import cv2
+
 wm = embedding("lena_grey.bmp", "mark.npy")
+
 cv2.imwrite("shadowmark_lena_grey.bmp", wm)
+
 print("Saved: shadowmark_lena_grey.bmp")
+
 PY
-Expected output:
+```
+Expected output:ShellSaved: shadowmark_lena_grey.bmp
 
-makefile
-Copia codice
-Saved: shadowmark_lena_grey.bmp
 3. Run smoke tests (TP / TN / attacks)
-bash
-Copia codice
+```Bash
 python test_smoke.py
-Expected:
-
-TP self-sim ≈ 1.0
+```
+Expected:ShellTP self-sim ≈ 1.0
 
 TN sim ≈ 0.0
 
 Attacks: some with WPSNR ≥ 35 and sim < tau (valid destroyed images)
 
-4. Compute ROC curve and find τ
-bash
-Copia codice
+4. Compute ROC curve and find $tau$
+```Bash
 python roc_threshold.py
-This generates:
+```
+This generates:roc.png and roc.pdf — ROC plottau.json — threshold and statisticsExample output:Ini, TOMLAUC=1.000  tau=0.307841  @ FPR=0.000, TPR=1.000
 
-roc.png and roc.pdf — ROC plot
+Then, open detection_shadowmark.py and set this $tau$:Pythontau = 0.307841
 
-tau.json — threshold and statistics
-
-Example output:
-
-ini
-Copia codice
-AUC=1.000  tau=0.307841  @ FPR=0.000, TPR=1.000
-Then, open detection_shadowmark.py and set this τ:
-
-python
-Copia codice
-tau = 0.307841
 5. Check detection correctness
 5.1 Watermarked vs itself
-bash
-Copia codice
+```Bash
 python - <<'PY'
+
 from detection_shadowmark import detection
+
 p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey.bmp")
+
 print("presence:", p, "wpsnr:", w)
+
 PY
+```
 Expected: presence = 1, wpsnr ≈ 9999999.0.
-
 5.2 Valid attack (e.g., resize)
-bash
-Copia codice
+```Bash
 python - <<'PY'
-import cv2
-from attacks import attack_resize
-from detection_shadowmark import detection
-wm = cv2.imread("shadowmark_lena_grey.bmp", 0)
-att = attack_resize(wm, scale=0.6)
-cv2.imwrite("shadowmark_lena_grey_resize06.bmp", att)
-p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_resize06.bmp")
-print("resize06 -> presence:", p, "wpsnr:", w)
-PY
-Expected: presence = 0, WPSNR ≥ 35 dB.
 
+import cv2
+
+from attacks import attack_resize
+
+from detection_shadowmark import detection
+
+wm = cv2.imread("shadowmark_lena_grey.bmp", 0)
+
+att = attack_resize(wm, scale=0.6)
+
+cv2.imwrite("shadowmark_lena_grey_resize06.bmp", att)
+
+p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_resize06.bmp")
+
+print("resize06 -> presence:", p, "wpsnr:", w)
+
+PY
+```
+Expected: presence = 0, WPSNR ≥ 35 dB.
 6. Negative checks (professor’s requirements)
 6.1 Clean image → must not detect watermark
-bash
-Copia codice
+```Bash
 python - <<'PY'
+
 from detection_shadowmark import detection
+
 p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","lena_grey.bmp")
+
 print("clean -> presence:", p, "wpsnr:", w)
+
 PY
+```
 Expected: presence = 0.
-
 6.2 Destroyed image (WPSNR < 35) → must not detect
-bash
-Copia codice
+```Bash
 python - <<'PY'
+
 import cv2
+
 from attacks import attack_awgn
+
 from detection_shadowmark import detection
+
 wm = cv2.imread("shadowmark_lena_grey.bmp",0)
+
 destroyed = attack_awgn(wm, sigma=30)
+
 cv2.imwrite("shadowmark_lena_grey_destroyed.bmp", destroyed)
+
 p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_destroyed.bmp")
+
 print("destroyed -> presence:", p, "wpsnr:", w)
+
 PY
+```
 Expected: presence = 0, WPSNR < 35.
-
 7. Timing (must be < 5 seconds)
-bash
-Copia codice
+```Bash
 python - <<'PY'
-import time
-from detection_shadowmark import detection
-t0=time.time()
-_ = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_resize06.bmp")
-print("elapsed:", time.time()-t0)
-PY
-8. Attack log (optional)
-Append entries of valid attacks (WPSNR ≥ 35, presence=0):
 
-sql
-Copia codice
-Image,Group,WPSNR,Attack,Params,OutputFile
+import time
+
+from detection_shadowmark import detection
+
+t0=time.time()
+
+_ = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_resize06.bmp")
+
+print("elapsed:", time.time()-t0)
+
+PY
+```
+8. Attack log (optional)Append entries of valid attacks (WPSNR $ge$ 35, presence=0):Snippet di codiceImage,Group,WPSNR,Attack,Params,OutputFile
+
 lena_grey.bmp,shadowmark,47.42,resize,scale=0.6,shadowmark_lena_grey_resize06.bmp
+
 lena_grey.bmp,shadowmark,47.52,awgn,sigma=6,shadowmark_lena_grey_awgn6.bmp

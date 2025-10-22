@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 # embedding.py
 # Group: shadowmark
 # Spread-spectrum embedding in the 2D-DCT domain (multiplicative),
@@ -74,4 +71,3 @@ def embedding(input1, input2):
     out = _2d_idct(Cmod)
     out = np.rint(np.clip(out, 0, 255)).astype(np.uint8)
     return out
->>>>>>> try

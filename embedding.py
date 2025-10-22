@@ -1,15 +1,19 @@
 # embedding.py
+# Group: shadowmark
+# Spread-spectrum embedding in the 2D-DCT domain (multiplicative),
+# deterministic mid-band coordinates. Self-contained, no I/O or prints.
+
 import numpy as np
 import cv2
 from scipy.fft import dct, idct
 
+# ---- Tunables (must mirror detection constants) ----
 ALPHA = 0.08
-MID_LO, MID_HI = 4, 60   # widen the band (was too narrow for 1024 picks)
-SEED = 123               # keep your seed
-MARK_SIZE = 1024         # keep 1024 per challenge
+MARK_SIZE = 1024
+SEED = 123
+MID_LO, MID_HI = 4, 60  # mid-frequency band; widened to ensure >= MARK_SIZE coords
 
-rng = np.random.default_rng(SEED)
-
+# ---- Helpers ----
 def _load_watermark(input2, mark_size=MARK_SIZE):
     if isinstance(input2, str):
         W = np.load(input2)
@@ -29,30 +33,22 @@ def _midband_coords(h, w, lo=MID_LO, hi=MID_HI):
     return [(u, v) for u in range(h) for v in range(w) if lo <= (u + v) <= hi]
 
 def _fixed_coords(h, w, k, seed=SEED, lo=MID_LO, hi=MID_HI):
-    """
-    Deterministically select k mid-band coordinates.
-    If the band is still too small, automatically expand it until we have >= k.
-    """
     rng_local = np.random.default_rng(seed)
     coords = _midband_coords(h, w, lo, hi)
-
-    # If not enough coords, expand the band upward until we have >= k or we hit the max possible
     while len(coords) < k and hi < (h + w - 2):
         hi += 2
         coords = _midband_coords(h, w, lo, hi)
-
     if len(coords) < k:
-        # fallback: take all available if we still don't have k
         k = len(coords)
-
     idx = rng_local.choice(len(coords), size=k, replace=False)
     return [coords[i] for i in idx]
 
+# ---- Public API ----
 def embedding(input1, input2):
     """
-    input1: path to grayscale BMP 512x512
-    input2: path to .npy watermark or array-like
-    return : watermarked image (uint8), no prints, no saving
+    input1: path to original grayscale BMP image (512x512)
+    input2: path to watermark (.npy) or array-like (binary)
+    return : watermarked image (np.uint8), no side effects
     """
     img = cv2.imread(input1, cv2.IMREAD_GRAYSCALE)
     if img is None:
@@ -60,7 +56,7 @@ def embedding(input1, input2):
     imgf = img.astype(np.float32)
 
     W = _load_watermark(input2, MARK_SIZE)
-    S = (2.0 * W.astype(np.float32) - 1.0)  # map {0,1} -> {-1,+1}
+    S = (2.0 * W.astype(np.float32) - 1.0)  # {0,1} -> {-1,+1}
 
     C = _2d_dct(imgf)
     sign = np.sign(C); Cabs = np.abs(C)

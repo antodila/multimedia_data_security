@@ -1,4 +1,12 @@
+notebook
 numpy
 scipy
-opencv-python
 scikit-learn
+pandas
+matplotlib
+opencv-python
+ipykernel
+common
+pycompile
+scikit-image
+PyWavelets

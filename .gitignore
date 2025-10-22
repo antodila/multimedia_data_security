@@ -1,21 +1,61 @@
-# Python virtual environments
-OFF_MDS_ENV/
-
-# Byte-compiled / cache / logs
+# === Python build / cache ===
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.egg-info/
 *.log
 
-# Data, system junk, and editors
-*.db
-*.sqlite
-.DS_Store
-.ipynb_checkpoints/
-.env
-*.egg-info/
-*.exe
+# === Virtual environment ===
+OFF_MDS_ENV/
+venv/
+.env/
+.venv/
 
-# Jupyter notebook checkpoints
-.ipynb_checkpoints/
+# === Version control ===
+.git/
+.gitignore
+
+# === Temporary and OS-specific ===
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+~$*
+
+# === Image artifacts (generated or input) ===
+lena_grey.bmp
+shadowmark_*.bmp
+*.jpg
+*.jpeg
+*.png
+*.pdf
+
+# === Watermark and data artifacts ===
+mark.npy
+tau.json
+attack_log.csv
+
+# === Intermediate / test scripts ===
+test_smoke.py
+make_watermark.py
+attack_and_detect.py
+grid_search_attacks.py
+quick_detect_check.py
+
+# === Environment / IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === Archive output ===
+submission_shadowmark.zip
+
+# === Keep deliverables (explicitly exclude from ignore) ===
+!embedding.py
+!detection_shadowmark.py
+!roc_threshold.py
+!roc.png
+!README.md
+!attacks.py

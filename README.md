@@ -147,85 +147,50 @@ Expected: presence = 0, WPSNR ≥ 35 dB.
 6.1 Clean image → must not detect watermark
 ```Bash
 python - <<'PY'
-
 from detection_shadowmark import detection
-
 p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","lena_grey.bmp")
-
 print("clean -> presence:", p, "wpsnr:", w)
-
 PY
 ```
-Expected: presence = 0.
-6.2 Destroyed image (WPSNR < 35) → must not detect
-```Bash
-python - <<'PY'
+Expected: `presence = 0`.
 
+### 3\. Destroyed image (WPSNR < 35 → should NOT detect)
+```
+python - <<'PY'
 import cv2
-
 from attacks import attack_awgn
-
 from detection_shadowmark import detection
-
 wm = cv2.imread("shadowmark_lena_grey.bmp",0)
-
 destroyed = attack_awgn(wm, sigma=30)
-
 cv2.imwrite("shadowmark_lena_grey_destroyed.bmp", destroyed)
-
 p,w = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_destroyed.bmp")
-
 print("destroyed -> presence:", p, "wpsnr:", w)
-
 PY
 ```
-Expected: presence = 0, WPSNR < 35.
-7. Timing (must be < 5 seconds)
-```Bash
-python - <<'PY'
+Expected: `presence = 0`, `WPSNR < 35`.
 
-import time
+* * * * *
 
-from detection_shadowmark import detection
+🔬 Attack Validation on the 101-Image Dataset
+---------------------------------------------
 
-t0=time.time()
+After computing the ROC curve (AUC = 0.858, τ = 0.037798), we validated the detection threshold\
+on five random images from the 101-image dataset (`0000.bmp` -- `0100.bmp`).
 
-_ = detection("lena_grey.bmp","shadowmark_lena_grey.bmp","shadowmark_lena_grey_resize06.bmp")
-
-print("elapsed:", time.time()-t0)
-
-PY
-```
-8. Attack log (optional)Append entries of valid attacks (WPSNR $ge$ 35, presence=0):
-```Snippet di codiceImage,Group,WPSNR,Attack,Params,OutputFile
-
-lena_grey.bmp,shadowmark,47.42,resize,scale=0.6,shadowmark_lena_grey_resize06.bmp
-
-lena_grey.bmp,shadowmark,47.52,awgn,sigma=6,shadowmark_lena_grey_awgn6.bmp
-```
-
-## 🔬 Attack Validation on the 101-Image Dataset
-
-Download the images that the teacher send, and add in a folder onto the project ones. After computing the ROC curve (AUC = 0.858, τ = 0.037798), we validated the detection threshold
-on five random images from the 101-image dataset (`0000.bmp` – `0100.bmp`).
-
-Each image was watermarked and tested under the three candidate attacks previously identified
-from the grid search:
+Each image was watermarked and tested under the three main attack types:
 
 | Attack | Avg WPSNR [dB] | Mean presence | Comment |
-|:--------|:---------------:|:--------------:|:---------|
-| AWGN σ = 14 | ≈ 40.3 – 40.4 | Variable (0 / 1) | Borderline, sometimes passes τ |
-| Resize 0.55 | ≈ 40 – 46 | Mostly 1 | Watermark still detected |
-| Resize 0.6 + JPEG 70 | ≈ 36 – 47 | Mostly 0 | ✅ Valid attack (WPSNR ≥ 35, presence = 0) |
+| --- | --- | --- | --- |
+| AWGN σ = 14 | ≈ 40.3 -- 40.4 | Variable (0 / 1) | Borderline, sometimes passes τ |
+| Resize 0.55 | ≈ 40 -- 46 | Mostly 1 | Watermark still detected |
+| Resize 0.6 + JPEG 70 | ≈ 36 -- 47 | Mostly 0 | ✅ Valid attack (WPSNR ≥ 35, presence = 0) |
 
-The **resize 0.6 + JPEG 70** combination consistently removes the watermark while preserving
-acceptable image quality (WPSNR ≥ 35 dB) across multiple random samples.
+The **resize 0.6 + JPEG 70** combination consistently removes the watermark while preserving\
+good image quality (WPSNR ≥ 35 dB) across multiple random samples.
 
----
+**Examples of valid destroyed images:**
 
-**Valid destroyed image examples**
-
-shadowmark_lena_grey_resize_scale0.6__jpeg_qf70.bmp
+`shadowmark_lena_grey_resize_scale0.6__jpeg_qf70.bmp
 shadowmark_0097_resize06_jpeg70.bmp
 shadowmark_0005_resize06_jpeg70.bmp
 shadowmark_0033_resize06_jpeg70.bmp

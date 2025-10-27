@@ -1,32 +1,23 @@
-# roc_threshold.py
-# Group: shadowmark
-# Compute ROC curve using 100 images (0000.bmp ... 0100.bmp) to estimate tau
-# Compatible with embedding.py and detection_shadowmark.py
-
 import json, glob, os
 import numpy as np
 import cv2
 from sklearn.metrics import roc_curve, auc
 import matplotlib
-matplotlib.use("Agg")  # Non-interactive backend (avoid crashes on Windows)
+matplotlib.use("Agg")  
 import matplotlib.pyplot as plt
-
 from embedding import embedding
 from scipy.fft import dct
 import attacks as A
 
-# === Configuration ===
-IMG_FOLDER = "images"  # images folder (where images are)
+IMG_FOLDER = "images"  
 MARK = "shadowmark.npy"
 SEED = 123
 MARK_SIZE = 1024
 MID_LO, MID_HI = 4, 60
 
-# Load all BMP images named 0000.bmp ... 0100.bmp
 IMAGES = sorted(glob.glob(os.path.join(IMG_FOLDER, "0*.bmp")))
 print(f"Found {len(IMAGES)} images for ROC computation.")
 
-# === Helpers (must mirror detection) ===
 def _2d_dct(x): 
     return dct(dct(x, axis=0, norm='ortho'), axis=1, norm='ortho')
 
@@ -61,7 +52,7 @@ def similarity(a, b):
     b = (b - b.mean())/(b.std() + 1e-9)
     return float(np.sum(a*b)/n)
 
-# --- Attacks for positives ---
+#Attacks for positives
 ATT_LIGHT = [
     ("jpeg",   {"qf": 90}),
     ("blur",   {"ksize": 3}),
@@ -77,7 +68,7 @@ def do_attack(img, name, params):
     if name == "sharp":  return A.attack_sharp(img, **params)
     return img
 
-# === ROC data collection ===
+# ROC data collection
 scores, labels = [], []
 counter = 0
 
@@ -88,18 +79,15 @@ for path in IMAGES:
         print(f"Warning: could not read {path}, skipping.")
         continue
 
-    # Embed watermark
     wm = embedding(path, MARK)
     v_wm = extract_ratio_vector(wm, orig)
-
-    # Positives: light attacks (watermark should survive)
     for name, params in ATT_LIGHT:
         att = do_attack(wm, name, params)
         v_att = extract_ratio_vector(att, orig)
         scores.append(similarity(v_wm, v_att))
         labels.append(1)
 
-    # Negatives: clean & random vectors (no watermark)
+    # Negatives
     v_clean = extract_ratio_vector(orig, orig)
     scores.append(similarity(v_wm, v_clean))
     labels.append(0)
@@ -114,23 +102,19 @@ for path in IMAGES:
 scores = np.array(scores, np.float32)
 labels = np.array(labels, np.int32)
 
-# === ROC computation ===
 fpr, tpr, thr = roc_curve(labels, scores)
 roc_auc = auc(fpr, tpr)
 
-# Select tau (threshold) where FPR <= 0.1 and TPR is maximal
 valid = np.where(fpr <= 0.1)[0]
 idx = valid[np.argmax(tpr[valid])] if valid.size else np.argmin(fpr)
 tau = float(thr[idx])
 
-# Save results
 with open("tau.json", "w") as f:
     json.dump({"tau": tau, "AUC": float(roc_auc), "FPR": float(fpr[idx]), "TPR": float(tpr[idx])}, f, indent=2)
 
 print(f"\nROC completed on {len(IMAGES)} images.")
 print(f"AUC={roc_auc:.3f}  tau={tau:.6f}  @ FPR={fpr[idx]:.3f}, TPR={tpr[idx]:.3f}")
 
-# === Plot ROC ===
 plt.figure(figsize=(6,6))
 plt.plot(fpr, tpr, lw=2, color='navy', label=f"AUC={roc_auc:.3f}")
 plt.plot([0,1],[0,1],"--", color="gray", lw=1)

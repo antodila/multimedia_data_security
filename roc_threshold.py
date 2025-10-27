@@ -17,7 +17,7 @@ import attacks as A
 
 # === Configuration ===
 IMG_FOLDER = "images"  # images folder (where images are)
-MARK = "mark.npy"
+MARK = "shadowmark.npy"
 SEED = 123
 MARK_SIZE = 1024
 MID_LO, MID_HI = 4, 60

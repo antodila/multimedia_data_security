@@ -1,237 +1,118 @@
-# attacks.py
-# Smart attack strategies for maximum destruction and coverage.
-# Counter-intuitive combinations for unpredictable effectiveness.
-
 import numpy as np
 import cv2
 
-# ---- Individual Attack Functions ----
-def attack_jpeg(img, qf=20):  # MAXIMUM DESTRUCTION: Ultra-aggressive JPEG
+def attack_jpeg(img, qf=20):  # MAXIMUM DESTRUCTION
     enc = [int(cv2.IMWRITE_JPEG_QUALITY), int(qf)]
     ok, buf = cv2.imencode(".jpg", img, enc)
     if not ok: return img
     return cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
 
-def attack_awgn(img, sigma=25):  # MAXIMUM NOISE: Ultra-aggressive noise
+def attack_awgn(img, sigma=25):  # MAXIMUM NOISE
     g = np.random.normal(0, sigma, img.shape).astype(np.float32)
     out = img.astype(np.float32) + g
     return np.clip(out, 0, 255).astype(np.uint8)
 
-def attack_blur(img, ksize=13):  # MAXIMUM BLUR: Ultra-aggressive blur
+def attack_blur(img, ksize=13):  # MAXIMUM BLUR
     k = ksize if ksize % 2 else ksize + 1
     return cv2.GaussianBlur(img, (k, k), 0)
 
-def attack_median(img, ksize=11):  # MAXIMUM MEDIAN: Ultra-aggressive median
+def attack_median(img, ksize=11):  # MAXIMUM MEDIAN
     k = ksize if ksize % 2 else ksize + 1
     return cv2.medianBlur(img, k)
 
-def attack_resize(img, scale=0.25):  # MAXIMUM RESIZE: Ultra-aggressive resize
+def attack_resize(img, scale=0.25):  # MAXIMUM RESIZE
     h, w = img.shape
     nh, nw = max(1, int(h * scale)), max(1, int(w * scale))
     small = cv2.resize(img, (nw, nh), interpolation=cv2.INTER_LINEAR)
     return cv2.resize(small, (w, h), interpolation=cv2.INTER_LINEAR)
 
-# ---- Smart Combined Attack Strategies ----
 def attack_strategy_1_stealth(img):
-    """
-    STEALTH DESTRUCTION: Subtle but effective
-    - Counter-intuitive: Small changes, big impact
-    - Targets watermark without obvious image damage
-    """
-    # Step 1: Very light blur (preserves structure, destroys high-freq watermark)
     img = cv2.GaussianBlur(img, (3, 3), 0)
-    
-    # Step 2: Light resize (destroys spatial patterns subtly)
     h, w = img.shape
     small = cv2.resize(img, (int(w*0.8), int(h*0.8)), cv2.INTER_LINEAR)
     img = cv2.resize(small, (w, h), cv2.INTER_LINEAR)
-    
-    # Step 3: Very light noise (adds randomness)
     noise = np.random.normal(0, 5, img.shape).astype(np.float32)
     img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
-    
-    # Step 4: Light median (removes remaining patterns)
     img = cv2.medianBlur(img, 3)
     
     return img
 
 def attack_strategy_2_brutal(img):
-    """
-    BRUTAL DESTRUCTION: Maximum aggression
-    - Heavy blur + extreme resize + heavy noise
-    - Maximum destruction approach
-    """
-    # Step 1: Heavy blur
     img = cv2.GaussianBlur(img, (15, 15), 0)
-    
-    # Step 2: Extreme resize
     h, w = img.shape
     small = cv2.resize(img, (int(w*0.3), int(h*0.3)), cv2.INTER_LINEAR)
     img = cv2.resize(small, (w, h), cv2.INTER_LINEAR)
-    
-    # Step 3: Heavy noise
     noise = np.random.normal(0, 20, img.shape).astype(np.float32)
     img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
-    
     return img
 
 def attack_strategy_3_smart(img):
-    """
-    SMART DESTRUCTION: Frequency-aware attack
-    - Moderate blur + JPEG + light median
-    - Targets different frequency components
-    """
-    # Step 1: Moderate blur (targets high frequencies)
     img = cv2.GaussianBlur(img, (7, 7), 0)
-    
-    # Step 2: JPEG compression (targets mid frequencies)
     enc = [int(cv2.IMWRITE_JPEG_QUALITY), 30]
     ok, buf = cv2.imencode(".jpg", img, enc)
     if ok:
         img = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
-    
-    # Step 3: Light median (targets remaining patterns)
-    img = cv2.medianBlur(img, 5)
-    
+    img = cv2.medianBlur(img, 5)    
     return img
 
 def attack_strategy_4_chaos(img):
-    """
-    CHAOS DESTRUCTION: Unpredictable sequence
-    - Counter-intuitive: Different each time
-    - Random order with varying intensities
-    """
-    # Random sequence of attacks with varying intensities
     attack_combinations = [
-        # Combination 1: Light attacks
         [lambda x: cv2.GaussianBlur(x, (3, 3), 0), lambda x: attack_awgn(x, 8), lambda x: attack_jpeg(x, 60)],
-        # Combination 2: Medium attacks  
         [lambda x: cv2.medianBlur(x, 5), lambda x: attack_resize(x, 0.7), lambda x: attack_awgn(x, 12)],
-        # Combination 3: Mixed intensity
         [lambda x: cv2.GaussianBlur(x, (7, 7), 0), lambda x: attack_jpeg(x, 40), lambda x: cv2.medianBlur(x, 3)],
-        # Combination 4: Heavy-light-heavy
         [lambda x: cv2.GaussianBlur(x, (9, 9), 0), lambda x: attack_awgn(x, 6), lambda x: attack_resize(x, 0.5)]
     ]
-    
-    # Choose random combination
     chosen_combination = np.random.choice(len(attack_combinations))
     attacks = attack_combinations[chosen_combination]
-    
-    # Apply attacks in sequence
     for attack in attacks:
         img = attack(img)
-    
     return img
 
 def attack_strategy_5_precision(img):
-    """
-    PRECISION DESTRUCTION: Targeted frequency attack
-    - High blur + low resize + moderate noise
-    - Targets specific watermark frequencies
-    """
-    # Step 1: High blur (destroys high-freq watermark)
     img = cv2.GaussianBlur(img, (11, 11), 0)
-    
-    # Step 2: Low resize (preserves image quality, destroys patterns)
     h, w = img.shape
     small = cv2.resize(img, (int(w*0.8), int(h*0.8)), cv2.INTER_LINEAR)
     img = cv2.resize(small, (w, h), cv2.INTER_LINEAR)
-    
-    # Step 3: Moderate noise (adds randomness)
     noise = np.random.normal(0, 15, img.shape).astype(np.float32)
     img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
-    
     return img
 
 def attack_strategy_6_wave(img):
-    """
-    WAVE DESTRUCTION: Progressive intensity
-    - Light → Medium → Heavy attacks
-    - Gradual destruction approach
-    """
-    # Wave 1: Light attacks
     img = cv2.GaussianBlur(img, (3, 3), 0)
     img = attack_awgn(img, 5)
-    
-    # Wave 2: Medium attacks
     img = cv2.medianBlur(img, 5)
     img = attack_jpeg(img, 50)
-    
-    # Wave 3: Heavy attacks
     img = cv2.GaussianBlur(img, (9, 9), 0)
     img = attack_resize(img, 0.5)
-    
     return img
 
 def attack_strategy_7_counter_intuitive(img):
-    """
-    COUNTER-INTUITIVE: Opposite of expected
-    - Light JPEG + Heavy blur + Light resize
-    - Counter-intuitive: Weak compression, strong blur
-    """
-    # Step 1: Light JPEG (preserves image, destroys mid-freq watermark)
     img = attack_jpeg(img, 80)
-    
-    # Step 2: Heavy blur (destroys high-freq watermark)
     img = cv2.GaussianBlur(img, (13, 13), 0)
-    
-    # Step 3: Light resize (preserves quality, destroys patterns)
     h, w = img.shape
     small = cv2.resize(img, (int(w*0.9), int(h*0.9)), cv2.INTER_LINEAR)
     img = cv2.resize(small, (w, h), cv2.INTER_LINEAR)
-    
     return img
 
 def attack_strategy_8_frequency_hunter(img):
-    """
-    FREQUENCY HUNTER: Targets specific frequencies
-    - Multiple small blurs + light noise + light median
-    - Counter-intuitive: Multiple small attacks vs one big
-    """
-    # Step 1: Multiple small blurs (targets different frequencies)
     for ksize in [3, 5, 7]:
         img = cv2.GaussianBlur(img, (ksize, ksize), 0)
-    
-    # Step 2: Light noise (adds randomness)
     noise = np.random.normal(0, 6, img.shape).astype(np.float32)
     img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
-    
-    # Step 3: Light median (removes patterns)
     img = cv2.medianBlur(img, 3)
-    
     return img
 
 def attack_strategy_9_surgical(img):
-    """
-    SURGICAL: Precise targeted attack
-    - Very light blur + JPEG + very light noise
-    - Counter-intuitive: Minimal changes, maximum effect
-    """
-    # Step 1: Very light blur
     img = cv2.GaussianBlur(img, (3, 3), 0)
-    
-    # Step 2: Moderate JPEG
     img = attack_jpeg(img, 50)
-    
-    # Step 3: Very light noise
     noise = np.random.normal(0, 4, img.shape).astype(np.float32)
     img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
-    
     return img
 
-# ---- Main Attack Function ----
 def attacks(input1, attack_name, param_array=None):
-    """
-    Main attack function with smart strategies
-    input1: path to watermarked image
-    attack_name: strategy name or single attack
-    param_array: parameters (optional)
-    """
     img = cv2.imread(input1, cv2.IMREAD_GRAYSCALE)
     if img is None:
         raise FileNotFoundError(f"Could not read image: {input1}")
-    
-    # Smart strategy selection
     if attack_name == "strategy_1_stealth":
         return attack_strategy_1_stealth(img)
     elif attack_name == "strategy_2_brutal":
@@ -251,7 +132,6 @@ def attacks(input1, attack_name, param_array=None):
     elif attack_name == "strategy_9_surgical":
         return attack_strategy_9_surgical(img)
     
-    # Individual attacks
     elif attack_name == "jpeg":
         qf = param_array[0] if param_array else 20
         return attack_jpeg(img, qf)
@@ -269,5 +149,4 @@ def attacks(input1, attack_name, param_array=None):
         return attack_resize(img, scale)
     
     else:
-        # Default: stealth strategy
         return attack_strategy_1_stealth(img)

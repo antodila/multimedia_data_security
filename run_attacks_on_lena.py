@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# run_attacks_on_lena.py
 import os, csv, itertools
 import cv2
 from detection_shadowmark import detection, wpsnr
@@ -8,7 +6,7 @@ import attacks as A
 OUTDIR = "attacked"
 os.makedirs(OUTDIR, exist_ok=True)
 
-# List of single attacks to test (name, function, params dict)
+# List of single attacks
 single_attacks = [
     ("jpeg", lambda img, p: A.attack_jpeg(img, qf=p["qf"]), {"qf":90}),
     ("jpeg", lambda img, p: A.attack_jpeg(img, qf=p["qf"]), {"qf":80}),
@@ -27,20 +25,19 @@ single_attacks = [
     ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.7}),
     ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.6}),
     ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.55}),
-    # strategy examples (if present in attacks.py)
+    # strategy examples
     ("strategy_1_stealth", lambda img, p: A.attack_strategy_1_stealth(img), {}),
     ("strategy_3_smart", lambda img, p: A.attack_strategy_3_smart(img), {}),
     ("strategy_4_chaos", lambda img, p: A.attack_strategy_4_chaos(img), {}),
 ]
 
-# Combined attacks (examples): (first attack, second attack)
+# Combined attacks
 combined_params = [
     (("resize", {"scale":0.6}), ("jpeg", {"qf":70})),
     (("resize", {"scale":0.6}), ("jpeg", {"qf":80})),
     (("resize", {"scale":0.7}), ("jpeg", {"qf":70})),
 ]
 
-# Read inputs
 orig_path = "lena_grey.bmp"
 wm_path = "shadowmark_lena_grey.bmp"
 orig = cv2.imread(orig_path, 0)
@@ -77,8 +74,6 @@ for name, func, params in single_attacks:
 
 # Run combined attacks
 for (a1, p1), (a2, p2) in combined_params:
-    # apply first
-    # map name to function quickly (reuse same lambdas as above)
     def apply_attack_by_name(img, name, params):
         if name == "jpeg": return A.attack_jpeg(img, qf=params["qf"])
         if name == "awgn": return A.attack_awgn(img, sigma=params["sigma"])
@@ -92,7 +87,6 @@ for (a1, p1), (a2, p2) in combined_params:
     label = f"att_{a1}_{list(p1.values())[0]}__{a2}_{list(p2.values())[0]}.bmp"
     save_and_log(img2, label)
 
-# Save CSV
 csv_path = "attack_log_lena.csv"
 with open(csv_path, "w", newline="") as f:
     writer = csv.DictWriter(f, fieldnames=["Image","Group","Presence","WPSNR","Attack","Params","OutputFile","Valid"])

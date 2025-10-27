@@ -8,8 +8,36 @@ import cv2
 from scipy.fft import dct
 from scipy.signal import convolve2d
 
-# ---- Threshold from your ROC run ----
-tau = 0.037798  # paste your numeric tau here
+import json, os
+tau = 0.037798
+if os.path.exists("tau.json"):
+    try:
+        with open("tau.json","r") as f:
+            tau = json.load(f).get("tau", tau)
+    except Exception:
+        pass
+
+# Allow override from environment variable (useful for testing / CI)
+env_tau = os.getenv("DETECTION_TAU")
+if env_tau is not None:
+    try:
+        tau = float(env_tau)
+    except Exception:
+        # ignore invalid env value and keep previous tau
+        pass
+
+def get_tau_source():
+    """
+    Return a tuple (source, tau_value) where source is one of:
+    - 'env'      : DETECTION_TAU environment variable was used
+    - 'file'     : tau.json was present and used
+    - 'fallback' : using the hardcoded fallback value
+    """
+    if "DETECTION_TAU" in os.environ:
+        return "env", float(tau)
+    if os.path.exists("tau.json"):
+        return "file", float(tau)
+    return "fallback", float(tau)
 
 # ---- Must mirror embedding constants ----
 SEED = 123

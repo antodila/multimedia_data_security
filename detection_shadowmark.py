@@ -9,12 +9,12 @@ from scipy.fft import dct
 from scipy.signal import convolve2d
 
 # ---- Threshold from your ROC run ----
-tau = 0.307841  # paste your numeric tau here
+tau=0.031963  # Updated optimal threshold from ROC computation
 
 # ---- Must mirror embedding constants ----
 SEED = 123
 MARK_SIZE = 1024
-MID_LO, MID_HI = 4, 60
+MID_LO, MID_HI = 1, 100
 
 # ---- DCT helpers ----
 def _2d_dct(x):

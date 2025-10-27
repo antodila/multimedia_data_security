@@ -12,7 +12,6 @@ venv/
 .env/
 .venv/
 
-images/
 
 # === Version control ===
 .git/

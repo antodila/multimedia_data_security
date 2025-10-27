@@ -29,18 +29,3 @@ def attack_resize(img, scale=0.6):
     small = cv2.resize(img, (nw, nh), interpolation=cv2.INTER_LINEAR)
     return cv2.resize(small, (w, h), interpolation=cv2.INTER_LINEAR)
 
-def attack_sharp(img, amount=1.0):
-    blur = cv2.GaussianBlur(img, (0,0), 3)
-    out = cv2.addWeighted(img.astype(np.float32), 1 + amount, blur.astype(np.float32), -amount, 0)
-    return np.clip(out, 0, 255).astype(np.uint8)
-
-def attack_brightness_contrast(img, alpha=1.2, beta=10):
-    """Adjust brightness and contrast"""
-    return cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
-
-def attack_gaussian_noise(img, mean=0, sigma=10):
-    """Add Gaussian noise (different from AWGN - additive)"""
-    noise = np.random.normal(mean, sigma, img.shape)
-    noisy = img.astype(np.float32) + noise
-    return np.clip(noisy, 0, 255).astype(np.uint8)
-

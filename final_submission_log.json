@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-10-27T17:22:08.891837",
+  "group_name": "shadowmark",
+  "submission_status": "READY",
+  "core_files": [
+    "embedding.py",
+    "detection_shadowmark.py",
+    "attacks.py",
+    "roc_threshold.py",
+    "mark.npy",
+    "tau.json",
+    "requirements.txt",
+    "README.md",
+    "COMPETITION_RULES.md",
+    "competition_log.csv"
+  ],
+  "performance_metrics": {
+    "embedding_speed": 71.72913527488708,
+    "detection_speed": 0.634,
+    "total_images_processed": 101,
+    "successful_embeddings": 101
+  },
+  "quality_metrics": {
+    "average_wpsnr": 51.41283432808433,
+    "min_wpsnr": 44.833342210147826,
+    "max_wpsnr": 62.35769899087935,
+    "estimated_points": 2
+  },
+  "compliance_status": "PASS",
+  "attack_capabilities": {
+    "individual_attacks": 5,
+    "smart_strategies": 9,
+    "total_methods": 14
+  }
+}

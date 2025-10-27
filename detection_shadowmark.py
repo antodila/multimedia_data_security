@@ -1,22 +1,14 @@
-# detection_shadowmark.py
-# Group: shadowmark
-# Detection with residual ratio in DCT domain. Self-contained.
-# Includes professor's WPSNR implementation (inline). No prints.
-
 import numpy as np
 import cv2
 from scipy.fft import dct
 from scipy.signal import convolve2d
 
-# ---- Threshold from your ROC run ----
 tau=0.031963  # Updated optimal threshold from ROC computation
 
-# ---- Must mirror embedding constants ----
 SEED = 123
 MARK_SIZE = 1024
 MID_LO, MID_HI = 1, 100
 
-# ---- DCT helpers ----
 def _2d_dct(x):
     return dct(dct(x, axis=0, norm='ortho'), axis=1, norm='ortho')
 
@@ -34,7 +26,6 @@ def _fixed_coords(h, w, k, seed=SEED, lo=MID_LO, hi=MID_HI):
     idx = rng_local.choice(len(coords), size=k, replace=False)
     return [coords[i] for i in idx]
 
-# ---- Feature: residual ratio vector (cancels image content) ----
 def _extract_ratio_vector(img, orig, mark_size=MARK_SIZE):
     """
     R(img) = C(img)/C(orig) - 1  over the embedding coordinates.
@@ -57,7 +48,7 @@ def _similarity(a, b):
     b = (b - b.mean())/(b.std() + 1e-9)
     return float(np.sum(a*b)/n)
 
-# ---- Professor's WPSNR (as provided) ----
+# Provided WPSNR 
 def _csffun(u, v):
     f = np.sqrt(u**2 + v**2)
     w = 2 * np.pi * f / 60
@@ -115,7 +106,6 @@ def wpsnr(image_a, image_b):
     decibels = 20 * np.log10(1.0 / np.sqrt(wmse))
     return decibels
 
-# ---- Public API ----
 def detection(input1, input2, input3):
     """
     input1: path to original (clean) image

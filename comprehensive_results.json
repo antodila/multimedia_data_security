@@ -1,0 +1,930 @@
+{
+  "embedding_results": [
+    {
+      "original": "images\\sample-images\\0000.bmp",
+      "watermarked": "output_images\\shadowmark_0000.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0001.bmp",
+      "watermarked": "output_images\\shadowmark_0001.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0002.bmp",
+      "watermarked": "output_images\\shadowmark_0002.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0003.bmp",
+      "watermarked": "output_images\\shadowmark_0003.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0004.bmp",
+      "watermarked": "output_images\\shadowmark_0004.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0005.bmp",
+      "watermarked": "output_images\\shadowmark_0005.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0006.bmp",
+      "watermarked": "output_images\\shadowmark_0006.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0007.bmp",
+      "watermarked": "output_images\\shadowmark_0007.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0008.bmp",
+      "watermarked": "output_images\\shadowmark_0008.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0009.bmp",
+      "watermarked": "output_images\\shadowmark_0009.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0010.bmp",
+      "watermarked": "output_images\\shadowmark_0010.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0011.bmp",
+      "watermarked": "output_images\\shadowmark_0011.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0012.bmp",
+      "watermarked": "output_images\\shadowmark_0012.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0013.bmp",
+      "watermarked": "output_images\\shadowmark_0013.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0014.bmp",
+      "watermarked": "output_images\\shadowmark_0014.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0015.bmp",
+      "watermarked": "output_images\\shadowmark_0015.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0016.bmp",
+      "watermarked": "output_images\\shadowmark_0016.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0017.bmp",
+      "watermarked": "output_images\\shadowmark_0017.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0018.bmp",
+      "watermarked": "output_images\\shadowmark_0018.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0019.bmp",
+      "watermarked": "output_images\\shadowmark_0019.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0020.bmp",
+      "watermarked": "output_images\\shadowmark_0020.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0021.bmp",
+      "watermarked": "output_images\\shadowmark_0021.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0022.bmp",
+      "watermarked": "output_images\\shadowmark_0022.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0023.bmp",
+      "watermarked": "output_images\\shadowmark_0023.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0024.bmp",
+      "watermarked": "output_images\\shadowmark_0024.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0025.bmp",
+      "watermarked": "output_images\\shadowmark_0025.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0026.bmp",
+      "watermarked": "output_images\\shadowmark_0026.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0027.bmp",
+      "watermarked": "output_images\\shadowmark_0027.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0028.bmp",
+      "watermarked": "output_images\\shadowmark_0028.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0029.bmp",
+      "watermarked": "output_images\\shadowmark_0029.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0030.bmp",
+      "watermarked": "output_images\\shadowmark_0030.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0031.bmp",
+      "watermarked": "output_images\\shadowmark_0031.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0032.bmp",
+      "watermarked": "output_images\\shadowmark_0032.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0033.bmp",
+      "watermarked": "output_images\\shadowmark_0033.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0034.bmp",
+      "watermarked": "output_images\\shadowmark_0034.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0035.bmp",
+      "watermarked": "output_images\\shadowmark_0035.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0036.bmp",
+      "watermarked": "output_images\\shadowmark_0036.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0037.bmp",
+      "watermarked": "output_images\\shadowmark_0037.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0038.bmp",
+      "watermarked": "output_images\\shadowmark_0038.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0039.bmp",
+      "watermarked": "output_images\\shadowmark_0039.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0040.bmp",
+      "watermarked": "output_images\\shadowmark_0040.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0041.bmp",
+      "watermarked": "output_images\\shadowmark_0041.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0042.bmp",
+      "watermarked": "output_images\\shadowmark_0042.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0043.bmp",
+      "watermarked": "output_images\\shadowmark_0043.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0044.bmp",
+      "watermarked": "output_images\\shadowmark_0044.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0045.bmp",
+      "watermarked": "output_images\\shadowmark_0045.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0046.bmp",
+      "watermarked": "output_images\\shadowmark_0046.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0047.bmp",
+      "watermarked": "output_images\\shadowmark_0047.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0048.bmp",
+      "watermarked": "output_images\\shadowmark_0048.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0049.bmp",
+      "watermarked": "output_images\\shadowmark_0049.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0050.bmp",
+      "watermarked": "output_images\\shadowmark_0050.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0051.bmp",
+      "watermarked": "output_images\\shadowmark_0051.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0052.bmp",
+      "watermarked": "output_images\\shadowmark_0052.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0053.bmp",
+      "watermarked": "output_images\\shadowmark_0053.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0054.bmp",
+      "watermarked": "output_images\\shadowmark_0054.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0055.bmp",
+      "watermarked": "output_images\\shadowmark_0055.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0056.bmp",
+      "watermarked": "output_images\\shadowmark_0056.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0057.bmp",
+      "watermarked": "output_images\\shadowmark_0057.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0058.bmp",
+      "watermarked": "output_images\\shadowmark_0058.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0059.bmp",
+      "watermarked": "output_images\\shadowmark_0059.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0060.bmp",
+      "watermarked": "output_images\\shadowmark_0060.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0061.bmp",
+      "watermarked": "output_images\\shadowmark_0061.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0062.bmp",
+      "watermarked": "output_images\\shadowmark_0062.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0063.bmp",
+      "watermarked": "output_images\\shadowmark_0063.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0064.bmp",
+      "watermarked": "output_images\\shadowmark_0064.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0065.bmp",
+      "watermarked": "output_images\\shadowmark_0065.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0066.bmp",
+      "watermarked": "output_images\\shadowmark_0066.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0067.bmp",
+      "watermarked": "output_images\\shadowmark_0067.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0068.bmp",
+      "watermarked": "output_images\\shadowmark_0068.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0069.bmp",
+      "watermarked": "output_images\\shadowmark_0069.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0070.bmp",
+      "watermarked": "output_images\\shadowmark_0070.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0071.bmp",
+      "watermarked": "output_images\\shadowmark_0071.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0072.bmp",
+      "watermarked": "output_images\\shadowmark_0072.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0073.bmp",
+      "watermarked": "output_images\\shadowmark_0073.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0074.bmp",
+      "watermarked": "output_images\\shadowmark_0074.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0075.bmp",
+      "watermarked": "output_images\\shadowmark_0075.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0076.bmp",
+      "watermarked": "output_images\\shadowmark_0076.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0077.bmp",
+      "watermarked": "output_images\\shadowmark_0077.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0078.bmp",
+      "watermarked": "output_images\\shadowmark_0078.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0079.bmp",
+      "watermarked": "output_images\\shadowmark_0079.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0080.bmp",
+      "watermarked": "output_images\\shadowmark_0080.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0081.bmp",
+      "watermarked": "output_images\\shadowmark_0081.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0082.bmp",
+      "watermarked": "output_images\\shadowmark_0082.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0083.bmp",
+      "watermarked": "output_images\\shadowmark_0083.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0084.bmp",
+      "watermarked": "output_images\\shadowmark_0084.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0085.bmp",
+      "watermarked": "output_images\\shadowmark_0085.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0086.bmp",
+      "watermarked": "output_images\\shadowmark_0086.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0087.bmp",
+      "watermarked": "output_images\\shadowmark_0087.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0088.bmp",
+      "watermarked": "output_images\\shadowmark_0088.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0089.bmp",
+      "watermarked": "output_images\\shadowmark_0089.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0090.bmp",
+      "watermarked": "output_images\\shadowmark_0090.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0091.bmp",
+      "watermarked": "output_images\\shadowmark_0091.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0092.bmp",
+      "watermarked": "output_images\\shadowmark_0092.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0093.bmp",
+      "watermarked": "output_images\\shadowmark_0093.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0094.bmp",
+      "watermarked": "output_images\\shadowmark_0094.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0095.bmp",
+      "watermarked": "output_images\\shadowmark_0095.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0096.bmp",
+      "watermarked": "output_images\\shadowmark_0096.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0097.bmp",
+      "watermarked": "output_images\\shadowmark_0097.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0098.bmp",
+      "watermarked": "output_images\\shadowmark_0098.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0099.bmp",
+      "watermarked": "output_images\\shadowmark_0099.bmp",
+      "status": "success"
+    },
+    {
+      "original": "images\\sample-images\\0100.bmp",
+      "watermarked": "output_images\\shadowmark_0100.bmp",
+      "status": "success"
+    }
+  ],
+  "smoke_test_results": [
+    {
+      "image": "0000.bmp",
+      "tp_similarity": 1.0,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.48545360565185547,
+          "wpsnr": 53.0881522897285
+        },
+        "awgn": {
+          "sim": 0.6250544786453247,
+          "wpsnr": 47.609791283801954
+        },
+        "blur": {
+          "sim": 0.6879821419715881,
+          "wpsnr": 38.64888729930311
+        },
+        "median": {
+          "sim": 0.5068737268447876,
+          "wpsnr": 42.873814203988815
+        },
+        "resize": {
+          "sim": 0.45662611722946167,
+          "wpsnr": 41.406681303212366
+        }
+      }
+    },
+    {
+      "image": "0001.bmp",
+      "tp_similarity": 0.9999998211860657,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.9495275616645813,
+          "wpsnr": 54.049951247290196
+        },
+        "awgn": {
+          "sim": -0.43095213174819946,
+          "wpsnr": 47.440075560775206
+        },
+        "blur": {
+          "sim": 0.9882166385650635,
+          "wpsnr": 46.22689079366818
+        },
+        "median": {
+          "sim": 0.8398550152778625,
+          "wpsnr": 48.546428792760246
+        },
+        "resize": {
+          "sim": 0.6532334089279175,
+          "wpsnr": 48.125983811583446
+        }
+      }
+    },
+    {
+      "image": "0002.bmp",
+      "tp_similarity": 0.9999998807907104,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": -0.8330113887786865,
+          "wpsnr": 54.00214405528257
+        },
+        "awgn": {
+          "sim": 0.15400007367134094,
+          "wpsnr": 47.47416382419439
+        },
+        "blur": {
+          "sim": 0.7125625014305115,
+          "wpsnr": 47.56887528575896
+        },
+        "median": {
+          "sim": -0.8228204250335693,
+          "wpsnr": 53.71524173357816
+        },
+        "resize": {
+          "sim": -0.5604021549224854,
+          "wpsnr": 50.374120704712
+        }
+      }
+    },
+    {
+      "image": "0003.bmp",
+      "tp_similarity": 1.0,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.995866596698761,
+          "wpsnr": 52.94886531279259
+        },
+        "awgn": {
+          "sim": 0.9909961223602295,
+          "wpsnr": 47.64718995412704
+        },
+        "blur": {
+          "sim": 0.9975503087043762,
+          "wpsnr": 44.40082337374142
+        },
+        "median": {
+          "sim": 0.9968610405921936,
+          "wpsnr": 47.597993385355686
+        },
+        "resize": {
+          "sim": 0.9935193657875061,
+          "wpsnr": 46.577986445272074
+        }
+      }
+    },
+    {
+      "image": "0004.bmp",
+      "tp_similarity": 0.9999999403953552,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.9997283220291138,
+          "wpsnr": 52.91386011468436
+        },
+        "awgn": {
+          "sim": 0.999100923538208,
+          "wpsnr": 47.21592181740689
+        },
+        "blur": {
+          "sim": 0.9884908199310303,
+          "wpsnr": 40.19718494479142
+        },
+        "median": {
+          "sim": -0.7961685657501221,
+          "wpsnr": 44.655226233796846
+        },
+        "resize": {
+          "sim": -0.9723629355430603,
+          "wpsnr": 43.38157099594939
+        }
+      }
+    },
+    {
+      "image": "0005.bmp",
+      "tp_similarity": 1.0,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.4894829988479614,
+          "wpsnr": 54.05286118454605
+        },
+        "awgn": {
+          "sim": 0.05360310897231102,
+          "wpsnr": 47.45683482103604
+        },
+        "blur": {
+          "sim": 0.201447993516922,
+          "wpsnr": 42.18860805500845
+        },
+        "median": {
+          "sim": -0.0725410133600235,
+          "wpsnr": 46.38086728294916
+        },
+        "resize": {
+          "sim": 0.028370574116706848,
+          "wpsnr": 44.912061400290646
+        }
+      }
+    },
+    {
+      "image": "0006.bmp",
+      "tp_similarity": 0.9999998807907104,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.7022565603256226,
+          "wpsnr": 53.471434291446094
+        },
+        "awgn": {
+          "sim": 0.3235170543193817,
+          "wpsnr": 47.25885658377433
+        },
+        "blur": {
+          "sim": 0.9917724132537842,
+          "wpsnr": 43.775619988645246
+        },
+        "median": {
+          "sim": 0.7665133476257324,
+          "wpsnr": 50.50489530243812
+        },
+        "resize": {
+          "sim": 0.5461608171463013,
+          "wpsnr": 46.739010896620655
+        }
+      }
+    },
+    {
+      "image": "0007.bmp",
+      "tp_similarity": 0.9999999403953552,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.9365590214729309,
+          "wpsnr": 52.44230621204629
+        },
+        "awgn": {
+          "sim": 0.39775094389915466,
+          "wpsnr": 47.47555865582906
+        },
+        "blur": {
+          "sim": 0.8319772481918335,
+          "wpsnr": 34.904560872056905
+        },
+        "median": {
+          "sim": 0.9708718657493591,
+          "wpsnr": 39.84615623804963
+        },
+        "resize": {
+          "sim": 0.9114589691162109,
+          "wpsnr": 37.82492865669472
+        }
+      }
+    },
+    {
+      "image": "0008.bmp",
+      "tp_similarity": 0.9999998807907104,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.382971853017807,
+          "wpsnr": 53.712250638044274
+        },
+        "awgn": {
+          "sim": 0.8940746784210205,
+          "wpsnr": 47.460737018859625
+        },
+        "blur": {
+          "sim": 0.8864841461181641,
+          "wpsnr": 43.961475294770686
+        },
+        "median": {
+          "sim": -0.1875305473804474,
+          "wpsnr": 49.833998987395454
+        },
+        "resize": {
+          "sim": 0.6687513589859009,
+          "wpsnr": 46.753980765252166
+        }
+      }
+    },
+    {
+      "image": "0009.bmp",
+      "tp_similarity": 0.9999997615814209,
+      "tn_similarity": 0.0,
+      "attacks": {
+        "jpeg": {
+          "sim": 0.9910059571266174,
+          "wpsnr": 52.87773072009522
+        },
+        "awgn": {
+          "sim": -0.987051784992218,
+          "wpsnr": 47.49143326625056
+        },
+        "blur": {
+          "sim": -0.9834259748458862,
+          "wpsnr": 42.01191894979406
+        },
+        "median": {
+          "sim": 0.9848904013633728,
+          "wpsnr": 46.08891453705191
+        },
+        "resize": {
+          "sim": -0.7600536346435547,
+          "wpsnr": 44.9403787360545
+        }
+      }
+    }
+  ],
+  "detection_results": [
+    {
+      "image": "0000.bmp",
+      "watermarked": {
+        "presence": 1,
+        "wpsnr": 9999999.0
+      },
+      "clean": {
+        "presence": 0,
+        "wpsnr": 48.16202845092248
+      },
+      "destroyed": {
+        "presence": 1,
+        "wpsnr": 33.932747339259286
+      }
+    },
+    {
+      "image": "0001.bmp",
+      "watermarked": {
+        "presence": 1,
+        "wpsnr": 9999999.0
+      },
+      "clean": {
+        "presence": 0,
+        "wpsnr": 54.13150827136391
+      },
+      "destroyed": {
+        "presence": 1,
+        "wpsnr": 33.88042997845292
+      }
+    },
+    {
+      "image": "0002.bmp",
+      "watermarked": {
+        "presence": 1,
+        "wpsnr": 9999999.0
+      },
+      "clean": {
+        "presence": 0,
+        "wpsnr": 48.216631423636365
+      },
+      "destroyed": {
+        "presence": 0,
+        "wpsnr": 33.902870174346894
+      }
+    },
+    {
+      "image": "0003.bmp",
+      "watermarked": {
+        "presence": 1,
+        "wpsnr": 9999999.0
+      },
+      "clean": {
+        "presence": 0,
+        "wpsnr": 51.18986198475335
+      },
+      "destroyed": {
+        "presence": 1,
+        "wpsnr": 33.99991392359483
+      }
+    },
+    {
+      "image": "0004.bmp",
+      "watermarked": {
+        "presence": 1,
+        "wpsnr": 9999999.0
+      },
+      "clean": {
+        "presence": 0,
+        "wpsnr": 47.378572150062254
+      },
+      "destroyed": {
+        "presence": 0,
+        "wpsnr": 33.56158567417218
+      }
+    }
+  ],
+  "attack_results": [
+    {
+      "image": "0000.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 41.20345199514165,
+      "valid_attack": false
+    },
+    {
+      "image": "0001.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 47.45904871943806,
+      "valid_attack": false
+    },
+    {
+      "image": "0002.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 49.28696723598088,
+      "valid_attack": false
+    },
+    {
+      "image": "0003.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 45.98413078714209,
+      "valid_attack": false
+    },
+    {
+      "image": "0004.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 0,
+      "wpsnr": 43.032333727696184,
+      "valid_attack": true
+    },
+    {
+      "image": "0005.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 0,
+      "wpsnr": 44.566072974355954,
+      "valid_attack": true
+    },
+    {
+      "image": "0006.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 46.12479752775158,
+      "valid_attack": false
+    },
+    {
+      "image": "0007.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 37.70749920488583,
+      "valid_attack": false
+    },
+    {
+      "image": "0008.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 1,
+      "wpsnr": 46.21394752500994,
+      "valid_attack": false
+    },
+    {
+      "image": "0009.bmp",
+      "attack": "resize_0.6_jpeg_70",
+      "presence": 0,
+      "wpsnr": 44.46039591444554,
+      "valid_attack": true
+    }
+  ]
+}

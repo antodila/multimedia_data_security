@@ -25,6 +25,9 @@ single_attacks = [
     ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.7}),
     ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.6}),
     ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.55}),
+    ("sharp", lambda img, p: A.attack_sharp(img, amount=p["amount"], radius=p.get("radius",1)), {"amount":1.0, "radius":1}),
+    ("sharp", lambda img, p: A.attack_sharp(img, amount=p["amount"], radius=p.get("radius",1)), {"amount":0.6, "radius":1}),
+
     # strategy examples
     ("strategy_1_stealth", lambda img, p: A.attack_strategy_1_stealth(img), {}),
     ("strategy_3_smart", lambda img, p: A.attack_strategy_3_smart(img), {}),

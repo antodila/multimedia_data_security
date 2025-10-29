@@ -1,100 +1,74 @@
-import os, csv, itertools
+import os, csv
 import cv2
-from detection_shadowmark import detection, wpsnr
+from detection_shadowmark import detection
 import attacks as A
 
-OUTDIR = "attacked"
-os.makedirs(OUTDIR, exist_ok=True)
+ORIG = "lena_grey.bmp"
+WM   = "shadowmark_lena_grey.bmp"
+OUT  = "attacked"
+os.makedirs(OUT, exist_ok=True)
 
-# List of single attacks
-single_attacks = [
-    ("jpeg", lambda img, p: A.attack_jpeg(img, qf=p["qf"]), {"qf":90}),
-    ("jpeg", lambda img, p: A.attack_jpeg(img, qf=p["qf"]), {"qf":80}),
-    ("jpeg", lambda img, p: A.attack_jpeg(img, qf=p["qf"]), {"qf":70}),
-    ("jpeg", lambda img, p: A.attack_jpeg(img, qf=p["qf"]), {"qf":60}),
-    ("awgn", lambda img, p: A.attack_awgn(img, sigma=p["sigma"]), {"sigma":6}),
-    ("awgn", lambda img, p: A.attack_awgn(img, sigma=p["sigma"]), {"sigma":10}),
-    ("awgn", lambda img, p: A.attack_awgn(img, sigma=p["sigma"]), {"sigma":12}),
-    ("awgn", lambda img, p: A.attack_awgn(img, sigma=p["sigma"]), {"sigma":14}),
-    ("blur", lambda img, p: A.attack_blur(img, ksize=p["ksize"]), {"ksize":3}),
-    ("blur", lambda img, p: A.attack_blur(img, ksize=p["ksize"]), {"ksize":5}),
-    ("median", lambda img, p: A.attack_median(img, ksize=p["ksize"]), {"ksize":3}),
-    ("median", lambda img, p: A.attack_median(img, ksize=p["ksize"]), {"ksize":5}),
-    ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.9}),
-    ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.8}),
-    ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.7}),
-    ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.6}),
-    ("resize", lambda img, p: A.attack_resize(img, scale=p["scale"]), {"scale":0.55}),
-    ("sharp", lambda img, p: A.attack_sharp(img, amount=p["amount"], radius=p.get("radius",1)), {"amount":1.0, "radius":1}),
-    ("sharp", lambda img, p: A.attack_sharp(img, amount=p["amount"], radius=p.get("radius",1)), {"amount":0.6, "radius":1}),
+def save(img, name):
+    path = os.path.join(OUT, name)
+    cv2.imwrite(path, img)
+    return path
 
-    # strategy examples
-    ("strategy_1_stealth", lambda img, p: A.attack_strategy_1_stealth(img), {}),
-    ("strategy_3_smart", lambda img, p: A.attack_strategy_3_smart(img), {}),
-    ("strategy_4_chaos", lambda img, p: A.attack_strategy_4_chaos(img), {}),
-]
+def log_if_valid(out_path, attack, params, rows):
+    p, w = detection(ORIG, WM, out_path)
+    valid = int(p == 0 and w >= 35.0)
+    print(f"{attack:18} {params:12} -> presence={p}  WPSNR={w:.2f}  VALID={valid}")
+    if valid:
+        rows.append({
+            "Image": "lena_grey.bmp",
+            "Group": "shadowmark",
+            "Presence": p,
+            "WPSNR": round(float(w), 2),
+            "Attack": attack,
+            "Params": params,
+            "OutputFile": out_path,
+            "Valid": valid
+        })
 
-# Combined attacks
-combined_params = [
-    (("resize", {"scale":0.6}), ("jpeg", {"qf":70})),
-    (("resize", {"scale":0.6}), ("jpeg", {"qf":80})),
-    (("resize", {"scale":0.7}), ("jpeg", {"qf":70})),
-]
+def main():
+    wm_img = cv2.imread(WM, 0)
+    if wm_img is None:
+        raise FileNotFoundError(f"Missing {WM}. Generate it first with embedding().")
 
-orig_path = "lena_grey.bmp"
-wm_path = "shadowmark_lena_grey.bmp"
-orig = cv2.imread(orig_path, 0)
-wm = cv2.imread(wm_path, 0)
-if orig is None or wm is None:
-    raise FileNotFoundError("Make sure lena_grey.bmp and shadowmark_lena_grey.bmp exist")
+    rows = []
 
-rows = []
-def save_and_log(img, label):
-    out_path = os.path.join(OUTDIR, label)
-    cv2.imwrite(out_path, img)
-    p, w = detection(orig_path, wm_path, out_path)
-    valid = 1 if (p==0 and w >= 35.0) else 0
-    rows.append({
-        "Image":"lena_grey.bmp",
-        "Group":"shadowmark",
-        "Presence":p,
-        "WPSNR":round(float(w),2),
-        "Attack": label.split("_")[1] if "_" in label else label,
-        "Params": label.split("_",2)[2] if "_" in label else "",
-        "OutputFile": out_path,
-        "Valid": valid
-    })
-    print(f"{label} -> presence={p}, WPSNR={w:.2f}, Valid={valid}")
+    # singoli (VALID nei tuoi test)
+    for qf in [60,50,40,30,20]:
+        path = save(A.attack_jpeg(wm_img, qf), f"att_jpeg_qf{qf}.bmp")
+        log_if_valid(path, "jpeg", f"qf={qf}", rows)
 
-# Run single attacks
-for name, func, params in single_attacks:
-    label = f"att_{name}"
-    if params:
-        param_str = "_".join(f"{k}{v}" for k,v in params.items())
-        label = f"{label}_{param_str}"
-    attacked = func(wm, params)
-    save_and_log(attacked, label + ".bmp")
+    path = save(A.attack_resize(wm_img, 0.8), "att_resize_s0.8.bmp")
+    log_if_valid(path, "resize", "scale=0.8", rows)
 
-# Run combined attacks
-for (a1, p1), (a2, p2) in combined_params:
-    def apply_attack_by_name(img, name, params):
-        if name == "jpeg": return A.attack_jpeg(img, qf=params["qf"])
-        if name == "awgn": return A.attack_awgn(img, sigma=params["sigma"])
-        if name == "blur": return A.attack_blur(img, ksize=params["ksize"])
-        if name == "median": return A.attack_median(img, ksize=params["ksize"])
-        if name == "resize": return A.attack_resize(img, scale=params["scale"])
-        return img
+    path = save(A.attack_median(wm_img, 5), "att_median_k5.bmp")
+    log_if_valid(path, "median", "ksize=5", rows)
 
-    img1 = apply_attack_by_name(wm, a1, p1)
-    img2 = apply_attack_by_name(img1, a2, p2)
-    label = f"att_{a1}_{list(p1.values())[0]}__{a2}_{list(p2.values())[0]}.bmp"
-    save_and_log(img2, label)
+    # combinazioni leggere (VALID nei tuoi test)
+    combos = [
+        ("resize+jpeg", lambda x: A.attack_jpeg(A.attack_resize(x, 0.6), 60), "scale=0.6,qf=60"),
+        ("resize+jpeg", lambda x: A.attack_jpeg(A.attack_resize(x, 0.8), 60), "scale=0.8,qf=60"),
+        ("blur+jpeg",   lambda x: A.attack_jpeg(A.attack_blur(x, 3), 70),     "ksize=3,qf=70"),
+        ("blur+jpeg",   lambda x: A.attack_jpeg(A.attack_blur(x, 3), 60),     "ksize=3,qf=60"),
+    ]
+    for name, fn, params in combos:
+        path = save(fn(wm_img), f"att_{name}_{params.replace(',','_').replace('=','')}.bmp")
+        log_if_valid(path, name, params, rows)
 
-csv_path = "attack_log_lena.csv"
-with open(csv_path, "w", newline="") as f:
-    writer = csv.DictWriter(f, fieldnames=["Image","Group","Presence","WPSNR","Attack","Params","OutputFile","Valid"])
-    writer.writeheader()
-    for r in rows:
-        writer.writerow(r)
+    # strategia (VALID nei tuoi test)
+    path = save(A.attack_strategy_3_smart(wm_img), "att_strategy_3_smart.bmp")
+    log_if_valid(path, "strategy_3_smart", "", rows)
 
-print(f"Saved log: {csv_path}")
+    # salva CSV solo dei validi
+    csv_path = "attack_log_lena_valid.csv"
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["Image","Group","Presence","WPSNR","Attack","Params","OutputFile","Valid"])
+        writer.writeheader()
+        writer.writerows(rows)
+    print(f"\nSaved valid log: {csv_path}  (rows={len(rows)})")
+
+if __name__ == "__main__":
+    main()

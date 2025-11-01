@@ -4,29 +4,23 @@ from embedding import embedding
 from detection_shadowmark import detection
 import attacks as A
 
-IMGS = sorted(glob.glob("images/*.bmp")) #sustitute with IMGS = sorted(glob.glob("images/*.bmp"))[:20] for less image
+IMGS = sorted(glob.glob("images/*.bmp"))[:20] #20 images
+#IMGS = sorted(glob.glob("images/*.bmp")) #all images
 assert IMGS, "No images found in images/*.bmp"
 OUTDIR = "attacked_batch"
 os.makedirs(OUTDIR, exist_ok=True)
 
 # definisci qui gli attacchi che vuoi testare in batch
 CANDIDATES = [
-    ("jpeg60",            lambda x: A.attack_jpeg(x, 60)),
-    ("jpeg40",            lambda x: A.attack_jpeg(x, 40)),
-    ("resize08",          lambda x: A.attack_resize(x, 0.8)),
-    ("median5",           lambda x: A.attack_median(x, 5)),
-    ("blur3+j60",         lambda x: A.attack_jpeg(A.attack_blur(x, 3), 60)),
-    ("resize06+j60",      lambda x: A.attack_jpeg(A.attack_resize(x, 0.6), 60)),
-    ("smart3",            lambda x: A.attack_strategy_3_smart(x)),
-    ("blur5+j50+med3",    lambda x: cv2.medianBlur(A.attack_jpeg(A.attack_blur(x, 5), 50), 3)),
-    ("blur5+j60+med3",    lambda x: cv2.medianBlur(A.attack_jpeg(A.attack_blur(x, 5), 60), 3)),
-    ("blur3+j60+med3",    lambda x: cv2.medianBlur(A.attack_jpeg(A.attack_blur(x, 3), 60), 3)),
-    ("resize08+j60+med3", lambda x: cv2.medianBlur(A.attack_jpeg(A.attack_resize(x, 0.8), 60), 3)),
-    ("blur7+j40+med5",    lambda x: cv2.medianBlur(A.attack_jpeg(A.attack_blur(x, 7), 40), 5)),
+    ("jpeg60", lambda x: A.attack_jpeg(x, 60)),
+    ("jpeg40", lambda x: A.attack_jpeg(x, 40)),
+    ("resize08+j60+med3", lambda x: A.attack_resize_jpeg_median(x, 0.6, 60, 3)),
+    ("blur3+j60+med3", lambda x: A.attack_blur_jpeg_median(x, 3, 60, 3)),
+    ("strategy3", lambda x: A.attack_strategy_3_smart(x)),
 ]
 
 
-N_KEYS = 1  # add more for better statistics
+N_KEYS = 3  # add more for better statistics
 rng = np.random.default_rng(2025)
 
 def run():

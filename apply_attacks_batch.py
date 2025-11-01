@@ -34,16 +34,15 @@ LOG_CSV = "attack_batch_log.csv"
 # Define your attack candidates here.
 # Each entry: (attack_name_for_log, callable_that_accepts_numpy_image, params_string)
 ATTACKS = [
-    ("jpeg60",        lambda img: A.attack_jpeg(img, 60),            "qf=60"),
-    ("jpeg40",        lambda img: A.attack_jpeg(img, 40),            "qf=40"),
-    ("resize08",      lambda img: A.attack_resize(img, 0.8),         "scale=0.8"),
-    ("median5",       lambda img: A.attack_median(img, 5),           "ksize=5"),
-    ("blur3+j60",     lambda img: A.attack_jpeg(A.attack_blur(img,3), 60), "ksize=3,qf=60"),
-    ("resize06+j60",  lambda img: A.attack_jpeg(A.attack_resize(img,0.6), 60), "scale=0.6,qf=60"),
-    ("smart3",        lambda img: A.attack_strategy_3_smart(img),    ""),
-    ("rz0.6+j60+med3",lambda img: A.attack_resize_jpeg_median(img,0.6,60,3), "scale=0.6,qf=60,med=3"),
-    ("blur7+j40+med5",lambda img: A.attack_blur_jpeg_median(img,7,40,5), "ksize=7,qf=40,med=5"),
+    ("jpeg40",         lambda img: A.attack_jpeg(img, 40),                         "qf=40"),
+    ("jpeg60",         lambda img: A.attack_jpeg(img, 60),                         "qf=60"),
+    ("blur3+j60",      lambda img: A.attack_jpeg(A.attack_blur(img,3), 60),        "ksize=3,qf=60"),
+    ("blur3+j60+med3", lambda img: A.attack_blur_jpeg_median(img, 3, 60, 3),       "ksize=3,qf=60,med=3"),
+    ("resize06+j60",   lambda img: A.attack_resize_jpeg_median(img, 0.6, 60, 3),   "scale=0.6,qf=60,med=3"),
+    ("blur5+j50+med3", lambda img: A.attack_blur_jpeg_median(img, 5, 50, 3),       "ksize=5,qf=50,med=3"),
+    ("resize08+j60+med3", lambda img: A.attack_resize_jpeg_median(img, 0.8, 60, 3),"scale=0.8,qf=60,med=3"),
 ]
+
 
 # -----------------------
 # Helpers

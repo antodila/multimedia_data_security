@@ -13,14 +13,12 @@ Key ideas:
 - Per-band (low/mid/high) linear gain calibration of the attacked feature to reduce benign distortions.
 - Weighted cosine similarity + z-scoring as decision statistic.
 - Random-baseline safety check: require similarity to exceed the best random alignment by a small margin.
-- Threshold tau is loaded from tau.json/threshold.txt with a safe fallback.
-
 API:
     detection(input1, input2, input3) -> (presence:int, wpsnr:float)
 """
 
 # ========== PARAMETERS ==========
-TAU_DEFAULT = 0.53  # Final threshold from tuning (target: 5% FPR)
+TAU_DEFAULT = 0.436230  # Valore da ROC (AUC=1.0, FPR=0.0)
 WPSNR_REJECT  = 0.00        # immediate reject for very degraded images (per challenge rules)
 
 # Previously: RND_TRIALS=30 and MIN_MARGIN=0.05

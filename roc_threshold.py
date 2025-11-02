@@ -31,7 +31,9 @@ print(f"Found {len(IMAGES)} images for ROC computation.")
 # -------------------
 def _prefilter(img):
     """Apply a very light Gaussian blur to stabilize DCT coefficients."""
-    return cv2.GaussianBlur(img, (3,3), 0.5)
+    # Nota: questo deve corrispondere al prefilter in detection_shadowmark.py
+    # Il tuo file di detection usa (5,5), 1.0. Aggiorniamo questo per coerenza.
+    return cv2.GaussianBlur(img, (5,5), 1.0) # Aggiornato da (3,3), 0.5
 
 def _2d_dct(x):
     """Computes the 2D Discrete Cosine Transform (orthonormal version)."""
@@ -70,7 +72,7 @@ def _band_masks(locs):
         else:         high.append(idx)
     return np.array(low), np.array(mid), np.array(high)
 
-def _calibrate_per_band(v_wm, v_att, low_idx, mid_idx, high_idx, clip=(0.5, 2.0)):
+def _calibrate_per_band(v_wm, v_att, low_idx, mid_idx, high_idx, clip=(0.4, 3.0)): # Match clip range
     """
     Per-band linear gain calibration.
     Scales v_att to best match v_wm in each frequency band.
@@ -94,12 +96,13 @@ def _calibrate_per_band(v_wm, v_att, low_idx, mid_idx, high_idx, clip=(0.5, 2.0)
 
 def _weights_for_locs(locs):
     """Define frequency-dependent weights for the similarity calculation."""
+    # Assicurati che questi pesi corrispondano a detection_shadowmark.py
     w = []
     for (u,v) in locs:
         s = u+v
-        if   s <= 15: w.append(1.50)  # High weight for stable low frequencies
-        elif s <= 50: w.append(1.10)  # Medium weight
-        else:         w.append(0.40)  # Low weight for volatile high frequencies
+        if   s <= 15: w.append(1.85)
+        elif s <= 50: w.append(1.15)
+        else:         w.append(0.30)
     return np.asarray(w, dtype=np.float32)
 
 def extract_ratio_vector(img, orig, locs):
@@ -204,7 +207,7 @@ for path in IMAGES:
         # Center the attacked vector (by subtracting the same baseline)
         v_att_c = v_att - v_clean
         # Calibrate the centered, attacked vector against the reference watermark vector
-        v_att_c = _calibrate_per_band(v_wm_c, v_att_c, low_idx, mid_idx, high_idx, clip=(0.5, 2.0))
+        v_att_c = _calibrate_per_band(v_wm_c, v_att_c, low_idx, mid_idx, high_idx, clip=(0.4, 3.0))
         # Calculate similarity and store the score and label
         scores.append(similarity_weighted(v_wm_c, v_att_c, wfreq))
         labels.append(1)
@@ -213,18 +216,22 @@ for path in IMAGES:
     # Generate TRUE NEGATIVE samples (label=0)
     # This simulates running detection on an unwatermarked (original) image
     # The 'attacked' vector is just the feature vector from the original image itself
-    v_att = extract_ratio_vector(orig, orig, locs) # Note: v_att is from 'orig'
+    v_att = extract_ratio_vector(orig, orig, locs) # Nota: v_att è da 'orig'
     v_att = _winsorize(v_att, p=2.0)
     # Centering this vector results in (v_clean - v_clean), which is near-zero
     v_att_c = v_att - v_clean
     # Calibrate this near-zero vector against the reference watermark
-    v_att_c = _calibrate_per_band(v_wm_c, v_att_c, low_idx, mid_idx, high_idx, clip=(0.5, 2.0))
+    v_att_c = _calibrate_per_band(v_wm_c, v_att_c, low_idx, mid_idx, high_idx, clip=(0.4, 3.0))
     # The similarity score should be low
     scores.append(similarity_weighted(v_wm_c, v_att_c, wfreq))
     labels.append(0)
 
     if counter % 10 == 0:
         print(f"Processed {counter}/{len(IMAGES)} images...")
+
+# Pulisci il file temporaneo del watermark
+if os.path.exists("tmp_roc_wm.npy"):
+    os.remove("tmp_roc_wm.npy")
 
 # --- ROC Calculation ---
 # Convert lists to numpy arrays for sklearn

@@ -27,7 +27,7 @@ import attacks as A
 # Configuration
 # -----------------------
 ATTACKER = "shadowmark"       # your group name
-DOWNLOAD_DIR = "."            # where the downloaded watermarked files are placed
+DOWNLOAD_DIR = "download_test"            # where the downloaded watermarked files are placed
 OUT_DIR = "attacked_for_submission"
 LOG_CSV = "attack_batch_log.csv"
 

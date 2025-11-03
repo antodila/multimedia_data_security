@@ -107,24 +107,58 @@ def _midband_coords(h, w, lo=MID_LO, hi=MID_HI):
 
 def _fixed_coords(h, w, k, seed=SEED, lo=MID_LO, hi=MID_HI):
     """
-    Deterministic random subset of mid-band coordinates of size k.
-    Expands 'hi' if needed to ensure enough samples are available.
+    Deterministically select 'k' coordinates with a frequency-aware sampling:
+    - 35% from low (u+v ≤ 15)
+    - 55% from mid (15 < u+v ≤ 50)
+    - 10% from high (50 < u+v ≤ 100)
+    - If not enough coords are available, top up from the global midband [lo, hi].
+    The fixed RNG seed ensures reproducibility across runs.
     """
-    # Use a local RNG with a fixed seed for deterministic sampling
+    # Use a local, seeded Random Number Generator for deterministic results
     rng_local = np.random.default_rng(seed)
-    coords = _midband_coords(h, w, lo, hi)
+
+    # Define the coordinate pools for each specific frequency band
+    low_coords  = [(u, v) for u in range(h) for v in range(w) if 1 <= (u + v) <= 15]
+    mid_coords  = [(u, v) for u in range(h) for v in range(w) if 15 < (u + v) <= 50]
+    high_coords = [(u, v) for u in range(h) for v in range(w) if 50 < (u + v) <= 100]
     
-    # Safety check: if we don't have enough coordinates, expand the frequency band
-    while len(coords) < k and hi < (h + w - 2):
-        hi += 2
-        coords = _midband_coords(h, w, lo, hi)
+    # Calculate the *target* number of samples from each band, capped by availability
+    low_count  = min(int(round(k * 0.35)), len(low_coords))  # 35% low
+    mid_count  = min(int(round(k * 0.55)), len(mid_coords))  # 55% mid
+    high_count = min(k - low_count - mid_count, len(high_coords)) # 10% high (the remainder)
+
+    selected_coords = []
+    
+    # Sample without replacement from the low band
+    if low_count > 0:
+        idx = rng_local.choice(len(low_coords), size=low_count, replace=False)
+        selected_coords.extend([low_coords[i] for i in idx])
+    
+    # Sample without replacement from the mid band
+    if mid_count > 0:
+        idx = rng_local.choice(len(mid_coords), size=mid_count, replace=False)
+        selected_coords.extend([mid_coords[i] for i in idx])
         
-    if len(coords) < k:
-        k = len(coords) # Adjust k if still not enough coords (e.g., tiny image)
+    # Sample without replacement from the high band
+    if high_count > 0:
+        idx = rng_local.choice(len(high_coords), size=high_count, replace=False)
+        selected_coords.extend([high_coords[i] for i in idx])
+
+    # If we still need more coordinates (e.g., bands were small),
+    # top up from the general pool, avoiding duplicates.
+    remaining = k - len(selected_coords)
+    if remaining > 0:
+        all_coords = _midband_coords(h, w, lo, hi)
+        # Find coordinates that are in the general pool but not yet selected
+        available = [c for c in all_coords if c not in selected_coords]
         
-    # Sample k coordinates without replacement
-    idx = rng_local.choice(len(coords), size=k, replace=False)
-    return [coords[i] for i in idx]
+        if len(available) >= remaining:
+            # Sample the remaining needed coordinates
+            idx = rng_local.choice(len(available), size=remaining, replace=False)
+            selected_coords.extend([available[i] for i in idx])
+
+    # Ensure exactly k coords (truncate if any rounding mismatch)
+    return selected_coords[:k]
 
 
 def _extract_ratio_vector(img, orig, locs, mark_size=MARK_SIZE):

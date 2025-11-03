@@ -165,6 +165,17 @@ def attack_blur_jpeg_median(img, k_blur=7, qf=40, k_med=5):
     out = attack_median(out, k_med)
     return out
 
+def attack_ULTIMATE_COMBO(img):
+    # 1. Brutal DCT attack (JPEG)
+    img = attack_jpeg(img, 5)
+    # 2. Brutal Wavelet attack (AWGN)
+    img = attack_awgn(img, 30)
+    # 3. Brutal Desync attack (Resize)
+    img = attack_resize(img, 0.3)
+    # 4. Cleanup (Median)
+    img = attack_median(img, 5)
+    return img
+
 # ----------------------
 # Unified dispatcher
 # ----------------------
@@ -175,6 +186,8 @@ def attacks(input1, attack_name, param_array=None):
 
     if attack_name == "strategy_1_stealth":
         return attack_strategy_1_stealth(img)
+    if attack_name == "ULTIMATE_COMBO":
+        return attack_ULTIMATE_COMBO(img)
     if attack_name == "strategy_2_brutal":
         return attack_strategy_2_brutal(img)
     if attack_name == "strategy_3_smart":

@@ -6,15 +6,6 @@ with the required competition naming convention: attacker_victim_imageName.bmp
 
 Usage:
     python apply_attacks_batch.py
-
-Configure the ATTACKS list below. Put downloaded watermarked images (from other groups)
-in the current folder or in the DOWNLOAD_DIR directory.
-
-The script will:
- - look for files matching "*_*.bmp" and treat the first token before the underscore as the victim/group
- - skip files already produced by our group (prefix "shadowmark_")
- - produce attacked files in OUT_DIR with names: shadowmark_<victim>_<imageName>.bmp
- - generate a CSV log: attack_batch_log.csv
 """
 import os
 import glob
@@ -32,27 +23,26 @@ OUT_DIR = "attacked_for_submission"
 LOG_CSV = "attack_batch_log.csv"
 
 # Define your attack candidates here.
-# Ogni riga: (nome_per_log, funzione_attacco, stringa_parametri)
-# --- LISTA RIORDINATA PER EFFICACIA (BASATA SUI TEST) ---
+# --- TENTATIVO FINALE: "SCORCHED EARTH" (TUTTI GLI ATTACCHI) ---
+# We will run this on a new victim and pray they are DCT-based.
+# --- LISTA ATTACCHI - TENTATIVO #8 (PRECISION "SWEET SPOT") ---
+# We know scale=0.4 is too weak (presence=1)
+# We know scale=0.25 is too strong (wpsnr < 35)
+# Let's try to find the exact spot in between.
 ATTACKS = [
-    # 1. Successo: 93.33%, WPSNR min: 35.57
-    ("blur3+j60+med3", lambda img: A.attack_blur_jpeg_median(img, 3, 60, 3),       "ksize=3,qf=60,med=3"),
+    ("resize_038", lambda img: A.attack_resize(img, 0.38), "scale=0.38"),
+    ("resize_035", lambda img: A.attack_resize(img, 0.35), "scale=0.35"),
+    ("resize_032", lambda img: A.attack_resize(img, 0.32), "scale=0.32"),
     
-    # 2. Successo: 91.67%, WPSNR min: 37.05
-    ("resize08+j60+med3", lambda img: A.attack_resize_jpeg_median(img, 0.8, 60, 3),"scale=0.8,qf=60,med=3"),
+    # We know median_5 is too weak (presence=1).
+    # Let's try median_5 *plus* a tiny bit of noise.
+    ("median_5_awgn_3", lambda img: A.attack_awgn(A.attack_median(img, 5), 3), "ksize=5,sigma=3"),
+    ("median_5_awgn_5", lambda img: A.attack_awgn(A.attack_median(img, 5), 5), "ksize=5,sigma=5"),
 
-    # 3. Successo: 90.00%, WPSNR min: 48.73 (Molto sicuro)
-    ("jpeg40",         lambda img: A.attack_jpeg(img, 40),                         "qf=40"),
-    
-    # 4. Successo: 75.00%, WPSNR min: 52.44 (Altissimo WPSNR)
-    ("jpeg60",         lambda img: A.attack_jpeg(img, 60),                         "qf=60"),
-    
-    # --- Altri candidati (non testati ma validi) ---
-    ("blur5+j50+med3", lambda img: A.attack_blur_jpeg_median(img, 5, 50, 3),       "ksize=5,qf=50,med=3"),
-    ("resize06+j60",   lambda img: A.attack_resize_jpeg_median(img, 0.6, 60, 3),   "scale=0.6,qf=60,med=3"),
-    ("blur3+j60",      lambda img: A.attack_jpeg(A.attack_blur(img,3), 60),        "ksize=3,qf=60"),
+    # Let's try a mild resize combined with a very mild attack.
+    ("resize_05_jpeg_80", lambda img: A.attack_jpeg(A.attack_resize(img, 0.5), 80), "scale=0.5,qf=80"),
+    ("resize_05_awgn_5", lambda img: A.attack_awgn(A.attack_resize(img, 0.5), 5), "scale=0.5,sigma=5"),
 ]
-
 
 # -----------------------
 # Helpers
@@ -125,7 +115,7 @@ def run():
                 continue
 
             # load the watermarked image (grayscale)
-            img = cv2.imread(vf, cvC2.IMREAD_GRAYSCALE)
+            img = cv2.imread(vf, cv2.IMREAD_GRAYSCALE)
             if img is None:
                 print(f"[WARN] cannot read {vf}, skipping")
                 continue

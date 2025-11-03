@@ -5,7 +5,7 @@ from scipy.fft import dct, idct  # Import Discrete Cosine Transform and its inve
 # ----------------------------
 # Embedding hyperparameters
 # ----------------------------
-ALPHA = 0.017          # Base modulation strength (this will be scaled adaptively per coefficient)
+ALPHA = 0.017         # Base modulation strength (this will be scaled adaptively per coefficient)
 MARK_SIZE = 1024       # Number of DCT coefficients to modify (length of the watermark)
 SEED = 123             # Fixed seed for reproducibility (ensures we select the same coordinates every time)
 MID_LO, MID_HI = 1, 100  # Candidate band: all (u,v) coordinates where 1 <= u+v <= 100 are candidates

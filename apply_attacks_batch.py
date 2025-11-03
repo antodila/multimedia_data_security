@@ -22,26 +22,37 @@ DOWNLOAD_DIR = "download_test"            # where the downloaded watermarked fil
 OUT_DIR = "attacked_for_submission"
 LOG_CSV = "attack_batch_log.csv"
 
-# Define your attack candidates here.
-# --- TENTATIVO FINALE: "SCORCHED EARTH" (TUTTI GLI ATTACCHI) ---
-# We will run this on a new victim and pray they are DCT-based.
-# --- LISTA ATTACCHI - TENTATIVO #8 (PRECISION "SWEET SPOT") ---
-# We know scale=0.4 is too weak (presence=1)
-# We know scale=0.25 is too strong (wpsnr < 35)
-# Let's try to find the exact spot in between.
+# --- ATTACKS ---
+# FORMAT: (log_name, attack_name_in_dispatcher, parameter_list, log_params_string)
 ATTACKS = [
-    ("resize_038", lambda img: A.attack_resize(img, 0.38), "scale=0.38"),
-    ("resize_035", lambda img: A.attack_resize(img, 0.35), "scale=0.35"),
-    ("resize_032", lambda img: A.attack_resize(img, 0.32), "scale=0.32"),
+    # High WPSNR attacks
+    ("jpeg_60", "jpeg", [60], "QF=60"),
+    ("jpeg_50", "jpeg", [50], "QF=50"),
+    ("jpeg_40", "jpeg", [40], "QF=40"),
+    ("resize_09", "resize", [0.9], "scale=0.9"),
+    ("resize_08", "resize", [0.8], "scale=0.8"),
     
-    # We know median_5 is too weak (presence=1).
-    # Let's try median_5 *plus* a tiny bit of noise.
-    ("median_5_awgn_3", lambda img: A.attack_awgn(A.attack_median(img, 5), 3), "ksize=5,sigma=3"),
-    ("median_5_awgn_5", lambda img: A.attack_awgn(A.attack_median(img, 5), 5), "ksize=5,sigma=5"),
-
-    # Let's try a mild resize combined with a very mild attack.
-    ("resize_05_jpeg_80", lambda img: A.attack_jpeg(A.attack_resize(img, 0.5), 80), "scale=0.5,qf=80"),
-    ("resize_05_awgn_5", lambda img: A.attack_awgn(A.attack_resize(img, 0.5), 5), "scale=0.5,sigma=5"),
+    # Combined attacks
+    ("strategy_3_smart", "strategy_3_smart", None, "Strategy 3: Smart (Blur+JPEG+Median)"),
+    ("strategy_4_chaos", "strategy_4_chaos", None, "Strategy 4: Chaos"),
+    ("strategy_9_surgical", "strategy_9_surgical", None, "Strategy 9: Surgical"),
+    ("strategy_1_stealth", "strategy_1_stealth", None, "Strategy 1: Stealth"),
+    ("strategy_2_brutal", "strategy_2_brutal", None, "s2: blur15+resize03+awgn20"),
+    ("strategy_5_precision", "strategy_5_precision", None, "s5: blur11+resize08+awgn15"),
+    ("strategy_6_wave", "strategy_6_wave", None, "s6: multi-stage mild"),
+    ("strategy_7_counter", "strategy_7_counter", None, "s7: jpeg80+blur13+resize09"),
+    ("strategy_8_freq", "strategy_8_freq", None, "s8: progressive blur+awgn6+med3"),
+    ("ULTIMATE_COMBO", "ULTIMATE_COMBO", None, "jpeg5+awgn30+resize03+med5"),
+    
+    # Medium attacks
+    ("median_3", "median", [3], "Median Filter k=3"),
+    ("median_5", "median", [5], "Median Filter k=5"),
+    ("blur_5", "blur", [5], "Gaussian Blur k=5"),
+    ("blur_7", "blur", [7], "Gaussian Blur k=7"),
+    ("sharp_10", "sharp", [1.0], "Sharpening amount=1.0"),
+    ("sharp_15", "sharp", [1.5], "Sharpening amount=1.5"),
+    ("awgn_10", "awgn", [10], "AWGN sigma=10"),
+    ("awgn_15", "awgn", [15], "AWGN sigma=15"),
 ]
 
 # -----------------------
@@ -50,18 +61,16 @@ ATTACKS = [
 def safe_output_path(attacker, victim, orig_basename, out_dir, suffix=None):
     """
     Build 'attacker_victim_origBasename' and ensure we don't overwrite files.
-    orig_basename is the image filename with extension (e.g. '0000.bmp' or 'image.bmp').
     """
     name_noext, ext = os.path.splitext(orig_basename)
-    if suffix:
-        name_noext = f"{name_noext}{suffix}"
-    out_name = f"{attacker}_{victim}_{name_noext}{ext}"
+    # Use the log_name (suffix) to make the filename unique
+    out_name = f"{attacker}_{victim}_{name_noext}_{suffix}{ext}"
     out_path = os.path.join(out_dir, out_name)
 
     if os.path.exists(out_path):
         i = 1
         while True:
-            alt = os.path.join(out_dir, f"{attacker}_{victim}_{name_noext}__{i}{ext}")
+            alt = os.path.join(out_dir, f"{attacker}_{victim}_{name_noext}_{suffix}__{i}{ext}")
             if not os.path.exists(alt):
                 out_path = alt
                 break
@@ -70,8 +79,8 @@ def safe_output_path(attacker, victim, orig_basename, out_dir, suffix=None):
 
 def parse_victim_and_image(filename):
     """
-    Given a filename like 'groupB_0000.bmp' or 'groupB_some_name.bmp',
-    return (victim_group, image_basename). If filename doesn't match, returns (None, None).
+    Given a filename like 'groupB_0000.bmp',
+    return (victim_group, image_basename).
     """
     base = os.path.basename(filename)
     if "_" not in base:
@@ -87,27 +96,23 @@ def parse_victim_and_image(filename):
 def run():
     os.makedirs(OUT_DIR, exist_ok=True)
 
-    # find candidate files: any "*_*.bmp" inside DOWNLOAD_DIR
     pattern = os.path.join(DOWNLOAD_DIR, "*_*.bmp")
     files = sorted(glob.glob(pattern))
     if not files:
         print("No downloaded watermarked files found (pattern: *_*.bmp). Put victim files in the download dir and retry.")
         return
 
-    # Filter: skip files that are already outputs from our group (prefix ATTACKER_)
     victim_files = [f for f in files if not os.path.basename(f).startswith(f"{ATTACKER}_")]
 
     if not victim_files:
         print("No victim files to attack (all found files have your attacker prefix).")
         return
 
-    # Prepare CSV log
     csv_fields = ["attacker", "victim", "original_wm", "attacked_out", "attack_name", "params"]
     with open(LOG_CSV, "w", newline="") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(csv_fields)
 
-        # iterate victims
         for vf in victim_files:
             victim, image_basename = parse_victim_and_image(vf)
             if victim is None:
@@ -115,27 +120,29 @@ def run():
                 continue
 
             # load the watermarked image (grayscale)
-            img = cv2.imread(vf, cv2.IMREAD_GRAYSCALE)
-            if img is None:
-                print(f"[WARN] cannot read {vf}, skipping")
-                continue
-
+            # We don't need to do this. The attacks() function reads the path.
+            
             # apply each attack and save
-            for atk_name, atk_fn, params in ATTACKS:
+            # THIS IS THE FIXED LOOP
+            for log_name, attack_name, param_array, params_str in ATTACKS:
                 try:
-                    attacked = atk_fn(img)  # returns numpy uint8 image
+                    # Call the main dispatcher function A.attacks()
+                    # It reads the file 'vf' and applies the attack
+                    attacked = A.attacks(vf, attack_name, param_array)
+                    
                 except Exception as e:
-                    print(f"[ERROR] attack {atk_name} failed on {vf}: {e}")
+                    print(f"[ERROR] attack {attack_name} failed on {vf}: {e}")
                     continue
 
-                out_path = safe_output_path(ATTACKER, victim, image_basename, OUT_DIR)
+                # Pass log_name as the suffix to create a unique filename
+                out_path = safe_output_path(ATTACKER, victim, image_basename, OUT_DIR, suffix=log_name)
                 ok = cv2.imwrite(out_path, attacked)
                 if not ok:
                     print(f"[ERROR] failed to write {out_path}")
                     continue
 
-                writer.writerow([ATTACKER, victim, os.path.basename(vf), os.path.basename(out_path), atk_name, params])
-                print(f"Saved: {out_path}  (attack={atk_name} params={params})")
+                writer.writerow([ATTACKER, victim, os.path.basename(vf), os.path.basename(out_path), log_name, params_str])
+                print(f"Saved: {out_path}  (attack={log_name} params={params_str})")
 
     print(f"\nDone. Attacked images in '{OUT_DIR}'. CSV log: {LOG_CSV}")
 
